@@ -1,4 +1,4 @@
-//var fs = require('fs');
+var fs = require('fs');
 var Parser = require('./public/javascripts/flow-matic.js');
 
 
@@ -33,7 +33,6 @@ var Parser = require('./public/javascripts/flow-matic.js');
 
 var p = new Parser();
 
-// //console.log(p.parse(a))
 
 if (!process.argv[2]) return console.error('\n\tMISSING SOURCE FILE PATH!\n\tUSE: node app.js <source file> <result file>');
 if (!process.argv[3]) return console.error('\n\tMISSING RESULT FILE PATH!\n\tUSE: node app.js <source file> <result file>');

@@ -1,7 +1,7 @@
 (function factory(bundle) {
 
-	if (typeof window !== 'undefined') window.flowMatic = bundle;
-	else if (typeof module !== 'undefined') module.exports = bundle;
+	if (typeof window !== 'undefined') window.flowMatic = bundle();
+	else if (typeof module !== 'undefined') module.exports = bundle();
 
 })(function() {
 
@@ -227,5 +227,7 @@
 		return Parser;
 
 	})();
+
+	return Parser;
 
 });
