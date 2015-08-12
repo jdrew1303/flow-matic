@@ -47,7 +47,7 @@ fs.readFile(process.argv[2], 'utf8', function (err,data) {
 		if(err) {
 			console.log(err);
 		} else {
-			console.log("The file C:/books/book.java saved!");
+			console.log("\nGENERATED AND SAVED", process.argv[3], '\n');
 		}
 	}); 
 });
