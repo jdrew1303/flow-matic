@@ -58,7 +58,7 @@
 
 		function formatDataName(dataName) { return dataName.replace(/-/gim, '_'); }
 
-		function buildFieldDeclarations(fields) {
+		function buildFieldNameDeclarations(fields) {
 			var declarations = [];
 			fields.forEach(function(field) {
 				declarations.push('public static final String ' + formatDataName(field.dataName) + ' = "' + field.dataName + '";');
@@ -66,10 +66,18 @@
 			return declarations.join(LINE_BREAK);
 		}
 
+		function buildFieldSizeDeclarations(fields) {
+			var declarations = [];
+			fields.forEach(function(field) {
+				declarations.push('public static final Integer TAMANHO_' + formatDataName(field.dataName) + ' = ' + field.size + ';');
+			});
+			return declarations.join(LINE_BREAK);
+		}
+
 		function buildCommonAreaMetadata(fields) {
 			var build = ['private static final CommonAreaMetaData COMMON_AREA = new CommonAreaMetaData(', 'new FieldType[] {'];
 			fields.forEach(function(field) {
-				build.push('\tnew ' + field.javaType + '('+ formatDataName(field.dataName) +', ' + field.size + ');')
+				build.push('\tnew ' + field.javaType + '('+ formatDataName(field.dataName) +', TAMANHO_' + formatDataName(field.dataName) + ');')
 			});
 			build.push('});');
 			return build.join(LINE_BREAK +'\t');
@@ -77,7 +85,10 @@
 
 		return {
 			buildImpl: function(sourceData) {
-				return buildFieldDeclarations(sourceData.dataFields) + 
+				return buildFieldNameDeclarations(sourceData.dataFields) + 
+					LINE_BREAK + 
+					LINE_BREAK + 
+					buildFieldSizeDeclarations(sourceData.dataFields) + 
 					LINE_BREAK + 
 					LINE_BREAK + 
 					buildCommonAreaMetadata(sourceData.dataFields);
