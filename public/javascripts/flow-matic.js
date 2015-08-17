@@ -102,19 +102,20 @@
 	Parser = (function() {
 
 		var LINE_REGEX = 
-			/(\d+)\s+(\S+)\s+(?:PIC(?:TURE)?\s+(?:(S?)(9+)(?:\((\d+)\)(?:(V?)(9+)(?:\((\d+)\))?)?)?|(X+)(?:\((\d+)\))?))/i;
+			/(\d+)\s+(\S+?)\s+(?:(OCCURS\s+TIMES?))?\s+(?:PIC(?:TURE)?\s+(?:(S?)(9+)(?:\((\d+)\)(?:(V?)(9+)(?:\((\d+)\))?)?)?|(X+)(?:\((\d+)\))?))/i;
 		/*
-			0 source
-			1 level
-			2 data name
-			3 hasSign
-			4 99999
-			5 (N) of integer
-			6 V
-			7 99999
-			8 (N) of decimal
-			9 XXXXX
-			10 (N) of X
+			0  source
+			1  level
+			2  data name
+			3  OCCURS?
+			4  hasSign
+			5  99999
+			6  (N) of integer
+			7  V
+			8  99999
+			9  (N) of decimal
+			10 XXXXX
+			11 (N) of X
 		*/
 
 		function Parser() {}
@@ -157,8 +158,6 @@
 			sourceData.lines.forEach(function(line) {
 					line = line.substring(startIndx);
 
-
-					
 					// if is commented
 					if (sourceData.hasLineComments && line.charAt(0) === '*') return;
 
@@ -180,23 +179,23 @@
 				// DEFINE JAVATYPE
 
 					// IF NUMERIC		
-					if (matches[4]) {
-						var hasSign = !!(matches[3] && matches[3].length);
+					if (matches[5]) {
+						var hasSign = !!(matches[4] && matches[4].length);
 						var isDecimal = false;
 						var integer;
 						var decimals = 0;
-						if (matches[5]) {
-							integer = parseInt(matches[5], 10);
-							isDecimal = !!matches[6];
+						if (matches[6]) {
+							integer = parseInt(matches[6], 10);
+							isDecimal = !!matches[7];
 							if (isDecimal) {
 								
-								if(matches[8]) {
-									decimals = parseInt(matches[8], 10);
+								if(matches[9]) {
+									decimals = parseInt(matches[9], 10);
 								}
-								else decimals = matches[7].length;
+								else decimals = matches[8].length;
 							}
 						}
-						else integer = matches[4].length;
+						else integer = matches[5].length;
 
 
 						if (decimals) {
@@ -210,9 +209,9 @@
 						size = (hasSign ? 1:0) + integer + (isDecimal ? 1 : 0) + decimals;
 					}
 					// IF ALPHA
-					else if (matches[9]) {
+					else if (matches[10]) {
 						javaType = FieldTypes.STRING;
-						size = matches[10] ? parseInt(matches[10], 10) : matches[9].length;
+						size = matches[11] ? parseInt(matches[11], 10) : matches[10].length;
 					}
 
 					if (isFiller) {
@@ -233,7 +232,6 @@
 
 			return fields;
 		}
-
 
 		return Parser;
 
